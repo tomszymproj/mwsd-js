@@ -1,0 +1,103 @@
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="css/i.css" />
+</head>
+
+<body>
+  <div id="content-wrap">
+    <header>Monier-Williams Sanskrit Dictionary</header>
+    <div id="input-form-wrap">
+      <input type="text" id="input-field" name="input-field" placeholder="type a word..."></input>
+        <button type="button" value="submit" id="start-search">Search</button>
+        <!-- <div type="options-summary"></div> -->
+        <button type="button" value="toggle-options-visibility" id="hide-options" class="toggle-options-visibility invert-colors">Hide options</button>
+        <button type="button" value="toggle-options-visibility" id="show-options" class="toggle-options-visibility invert-colors hidden">Show options</button>
+      <!-- <div id="input-methods-wrapper" class="border"> -->
+      <div id="input-methods-wrapper">
+        <div id="input-methods-selector">
+          <span class="force-block">Choose input method</span>
+          <section class="options-group">
+            <div class="group">
+              <input type="radio" id="input-method-hk" name="input-method" class="input-method" value="hk" checked/>
+              <label for="input-method-hk">Harvard-Kioto</label>
+            </div>
+            <div class="group">
+              <input type="radio" id="input-method-iast" name="input-method" class="input-method" value="iast"/>
+              <label for="input-method-iast">IAST</label>
+            </div>
+            <div class="group">
+              <input type="radio" id="input-method-velthuis" name="input-method" class="input-method inactive" value="velthuis" disabled/>
+              <label for="input-method-velthuis" class="inactive">Velthuis</label>
+            </div>
+            <div class="group">
+              <input type="radio" id="input-method-none" name="input-method" class="input-method inactive" value="none" disabled/>
+              <label for="input-method-none" class="inactive">none (diacritcs insensitive)</label>
+            </div>
+          <div class="group">
+            <input type="radio" id="input-method-english" name="input-method" class="input-method" value="english"/>
+            <label for="option-fulltext">English</label>
+          </div>
+          </section>
+        </div><!-- end of input-methods-selector -->
+        <div id="display-method-selector">
+          <span class="force-block">Choose display method</span>
+          <section class="options-group">
+            <div class="group">
+              <input type="radio" id="display-method-hk" name="display-method" class="display-method" value="hk" checked/>
+              <label for="display-method-hk">Harvard-Kioto</label>
+            </div>
+            <div class="group">
+              <input type="radio" id="display-method-iast" name="display-method" class="display-method inactive" value="iast" disabled/>
+              <label for="display-method-iast" class="inactive">IAST</label>
+            </div>
+          </section>
+        </div> <!-- end of display-method-selector -->
+        <div id="search-options-wrap">
+          <span class="force-block">Choose search options</span>
+          <section class="options-group">
+            <div class="group">
+              <input type="checkbox" id="option-any-ending" name="option-any-ending" value="any-ending" checked/>
+              <label for="option-any-ending">Any word ending</label>
+            </div>
+            <div class="group">
+              <input type="checkbox" id="option-any-beginning" name="option-any-beginning" value="any-beginning"/>
+              <label for="option-any-beginning">Any word beginning</label>
+            </div>
+          </section>
+          <section class="options-group">
+            <input type="checkbox" id="option-fulltext" name="option-fulltext" value="fulltext"/>
+            <label for="option-fulltext">Fulltext search</label>
+          </section>
+        </div>
+      </div> <!-- end of input-methods-wrapper -->
+    </div> <!-- end of input-form-wrap -->
+    <div id="warnings-container">
+    </div>
+    <div id="search-match" class="border">
+      <p>Type sanskrit term in an <em>input field</em> above.</p>
+      <p>At any time you may use: '*' in your search to indicate 'any characters', eg:
+        <ul class="list-formatted">
+          <li class="list-formatted">'bhoj*' will search for any word starting with 'bhoj'</li>
+          <li class="list-formatted">'*vat' will search for any word ending with 'vat'</li>
+          <li class="list-formatted">'man*vat' will search for any word starting with 'man' and ending with 'vat'</li>
+          <li class="list-formatted">'*kara*' will search for any word containing 'kara' at any position</li>
+        </ul>
+          "Any word ending" is equivalent to 'word*'. It is <em>active by default</em>.<br />
+          "Any word beginning" is equivalent to '*word'.</p>
+          <p>"English" input method <em>auto-enables</em> "Fulltext search."<br />
+          "Fulltext" can be <em>manually toggled</em> for "HK", "IAST", "Velthuis" and "none".</p>
+          <p>"Fulltext" looks through the whole text contained in a dictionary.
+          Using "Fulltext" to search for words shorter than 3 characters and/or with "Any word ending/beginning" checked may result in <em>really long</em> searches and match list.</p>
+      <p>Chose input method, display method and search options right below input field.
+         Use "Hide/Show options" button to <em>toggle options visibility</em>.
+      </p>
+    </div>
+  </div> <!-- end of content-wrap -->
+  <script src="dict/letter.ranges.js"></script>
+  <script src="dict/mwsd.js"></script>
+  <script src="dict/wordlist.js"></script>
+  <script src="js/i.js"></script>
+</body>
+</html>

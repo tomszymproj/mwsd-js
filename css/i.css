@@ -1,0 +1,194 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-size: 16px;
+  font-weight: normal;
+}
+
+* {
+  /* color: #fefefe; */
+  /* background-color: #3d3d3d; */
+  background-color: #fefefe;
+  color: #3d3d3d;
+}
+
+a {
+  text-decoration: none;
+}
+
+header {
+  padding: 1rem 0.3rem;
+  font-size: 1.4rem;
+  color: skyblue;
+  font-weight: 700;
+}
+/* #input-methods-wrapper { */
+/* } */
+#content-wrap {
+  padding: 0.4rem;
+  max-width: 99vw;
+}
+
+#display-method-selector,
+#input-methods-selector,
+#search-options-wrap {
+  display: inline-block;
+}
+
+.inactive {
+  opacity: 0.3;
+}
+
+#chosen-input-method-scheme {
+  max-width: 90vw;
+  display: inline-block;
+  margin-left: 1rem;
+}
+
+#warnings-container {
+  padding: 10px;
+}
+
+button {
+  background-color: skyblue;
+  border: 2px solid skyblue;
+  border-radius: 5px;
+  color: #fefefe;
+  font-weight: bold;
+  font-size: 1.4rem;
+}
+
+button:hover {
+  color: skyblue;
+  background-color: #fefefe;
+}
+
+button.invert-colors {
+  background-color: #fefefe;
+  color: skyblue;
+}
+
+button.invert-colors:hover {
+  background-color: skyblue;
+  color: #fefefe;
+}
+
+.group {
+  display: inline-block;
+}
+
+input {
+  display: inline-block;
+  font-weight: bold;
+  font-size: 1.4rem;
+  padding: 5px;
+  border: 2px solid skyblue;
+  border-radius: 5px;
+}
+
+.toggle-options-visibility{
+  display: inline-block;
+}
+::placeholder {
+  color: #000000;
+  opacity: 0.2;
+}
+
+::disabled {
+  opacity: 0.2;
+}
+
+.options-group {
+  border: 2px solid #dfdfdf;
+  border-radius: 5px;
+  float: left;
+  padding: 0.3rem;
+  margin: 0.1rem;
+}
+
+.border {
+  border: 2px solid #dfdfdf;
+  padding: 0.3rem;
+  border-radius: 5px;
+}
+
+.force-block {
+  display: block;
+  margin: 0.3rem 0px;
+}
+
+.hidden {
+  display: none;
+}
+
+li {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.list-formatted {
+  list-style-type: circle;
+}
+
+#input-method-scheme ul {
+  display: inline-block;
+}
+
+#search-match {
+  line-height: 1.4rem;
+}
+
+article {
+  padding: 0.3rem 0;
+}
+
+.color-class{
+  background-color: lightblue;
+}
+
+.color-compound {
+  color: green;
+}
+
+.color-voice {
+  color: magenta;
+}
+
+.color-gram {
+  background-color: #f0f0f0f0;
+}
+
+.color-exact-term {
+  background-color: lightgreen;
+}
+
+.color-root {
+  color: hotpink;
+}
+
+.color-gender {
+  background-color: lightpink;
+}
+
+.color-match {
+  font-weight: bold;
+}
+
+@media only screen and (max-width: 400px) {
+  body, input, button {
+    font-size: 0.9rem;
+  }
+  .group {
+    display: block;
+  }
+}
+
+@media ( orientation : portrait ) {
+  body, input, button {
+    font-size: 0.9rem;
+  }
+  .group {
+    display: block;
+  }
+}
