@@ -70,7 +70,6 @@ let convertToHK = function(string) {
       let newString = imScheme['hk'][ii];
       while (ss.match(toBeReplaced)) { 
         ss = ss.replace(toBeReplaced, newString) ;
-        // console.log('searchTerm: ' + ss);
       };
     };
     return ss;
@@ -110,7 +109,7 @@ let search = function (searchedTerm, searchRange){
     } else { //use full wordlist if BOW is regex 
       ii = 0; 
       iiMax = rr.length;
-      };
+    };
   } else {
     rr = mwsdContent; //keep it before iiMax
     // st = new RegExp(`\\b${searchedTerm.replace(/\*/g, '.*')}\\b`) ;
@@ -173,6 +172,58 @@ let colorizeMatches = function(matches, termToColorize) {
   return matches;
 };
 
+function devanagariAlphabeticalSort(listOfWords, sourceTransliteration, returnType) { //wrapper function
+  const alphabeticalOrder = {
+    HK : ["a", "A", "i", "I", "u", "U", "R", "e", "ai", "o", "au", "M", "H", "k", "kh", "g", "gh", "G", "c", "ch", "j", "jh", "J", "T", "Th", "D", "Dh", "N", "t", "th", "d", "dh", "n", "p", "ph", "b", "bh", "m", "y", "r", "l", "v", "z", "S", "s", "h" ], 
+    IAST : ["a", "ā", "i", "ī", "u", "ū", "ṛ", "e", "ai", "o", "au", "ṃ", "ḥ", "k", "kh", "g", "gh", "ṅ", "c", "ch", "j", "jh", "ñ", "ṭ", "ṭh", "ḍ", "ḍh", "ṇ", "t", "th", "d", "dh", "n", "p", "ph", "b", "bh", "m", "y", "r", "l", "v", "ś", "ṣ", "s", "h" ],
+  } ;
+  
+  const orderMap = [...'0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'];
+  let sortingOrder = alphabeticalOrder.HK ;
+  let displayOrder = alphabeticalOrder.IAST;
+  let words = []; //words split into 'letters'
+  let mappedWords = [] ;//words mapped into orderMap 
+  let remappedWords = [];
+  let returnValue = []; 
+  
+  // split each word into alphabet 'letters'
+  listOfWords.forEach(function translateIntoOrderMap(word, index) {
+    let j = 0; //jump: no. of chars to jump to get to next 'letter' [1|2]
+    let n = 1; //next: character index, always s++
+    let s = 0; //start: character index, modified by jump, init 0
+    let mm = []; //mapped words: letters changed according to orderMap
+    word = String(word.split('	')[0].trim());
+    do {
+      // characters: two-char chunk, may be limited to one char 
+      let c = word.charAt(s) + word.charAt(n) ;
+      j = 2 ;
+      if (!/([kgjcTDtdpb]{1}h|a[ui]{1})/.test(c)) {//if not any of "ai, au, kh, gh..." limit c to one char
+        c = c.charAt(0) ;
+        j = 1  ;
+      };
+      mm.push(orderMap[sortingOrder.indexOf(c)]);
+      s += j ;
+      n = s + 1 ;
+    } while (s < word.length) ;
+      mappedWords.push([mm, index]) ;
+  });
+  
+  mappedWords.sort()
+  
+  if (returnType === 'indices') {
+    mappedWords.forEach( function _returnIndices(word) { returnValue.push(word.pop()) ;})
+  
+  } else {
+    mappedWords.forEach(function displayedWordList(word) {
+        let originalWord = listOfWords[word[word.length-1]] ;
+        returnValue.push(originalWord); 
+    })
+  };
+
+  return returnValue ;
+  // =============================
+}
+
 let update = function(userInput) {
   let matches ;
   let sanitizedInput; 
@@ -195,6 +246,7 @@ let update = function(userInput) {
   (searchOptionsContainer.querySelector('#option-fulltext').checked) && (searchRange = 'fulltext') ;
 
   matches = search(searchedTerm, searchRange); 
+  matches = devanagariAlphabeticalSort(matches, 'HK') ;
   matches = colorizeMatches(matches, termToColorize);
   // (dmCurrent === 'hk') || matches = convertFullTextToIAST(matches);
   displayMatches(matches);

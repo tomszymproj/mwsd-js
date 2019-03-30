@@ -71,7 +71,7 @@ It may take considerably longer (up to 10 seconds) if you search for short Engli
 
 ## Known issues
 
-- devanagari sorting order (to be solved soon, source dictionary file has wrong (English) sorting order)
+- let me know if you find any.
 
 ## To Do
 
