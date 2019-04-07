@@ -6,8 +6,6 @@ body {
 }
 
 * {
-  /* color: #fefefe; */
-  /* background-color: #3d3d3d; */
   background-color: #fefefe;
   color: #3d3d3d;
 }
@@ -22,8 +20,7 @@ header {
   color: skyblue;
   font-weight: 700;
 }
-/* #input-methods-wrapper { */
-/* } */
+
 #content-wrap {
   padding: 0.4rem;
   max-width: 99vw;

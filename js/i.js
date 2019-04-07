@@ -25,6 +25,7 @@ const inputMethodEnglish = document.querySelector('#input-method-english');
 //--------------------- vars
 let imCurrent;
 let warnings = [];
+let inputHistory = [];
 //--------------------- event listeners
 startSearchButton.addEventListener('click', function(){
   (inputField.value.length > 0) && update(inputField.value);
@@ -60,6 +61,20 @@ let checkOption = function(els) {
       return els[ii].value;
       };
   };
+};
+
+let checkCachedResults = function(userInput, inputHistory) {
+  let maxInputHistory = inputHistory.length ;
+  let matches = [];
+    for (x = 0 ; x < maxInputHistory ; x++) {  
+      if (inputHistory[x][0] === userInput) { 
+        inputHistory[x][1].forEach(
+          function(el) { matches.push(el) ;}
+        )
+        return matches;
+        break ;
+      } ;
+    } ;
 };
 
 let convertToHK = function(string) {
@@ -225,6 +240,7 @@ function devanagariAlphabeticalSort(listOfWords, sourceTransliteration, returnTy
 }
 
 let update = function(userInput) {
+  let inputCached;
   let matches ;
   let sanitizedInput; 
   let searchRange = 'wordlist';
@@ -232,24 +248,34 @@ let update = function(userInput) {
 
   clearContainer(warningsContainer);
   clearContainer(matchContainer);
+  
+  inputCached = checkCachedResults(userInput, inputHistory) ;
 
-  imCurrent = checkOption(imEls);// dear Tom from future: keep it before sanitize() call
-  // dmCurrent = checkOption(dmEls);
+  if (Array.isArray(inputCached)) { // if cached, display
+    displayMatches(inputCached) ;
+    console.log(`${userInput} found in cache as: ${inputCached[0]}`) ;
+  } else { //if not, look it up, colorize, push into inputHistory and display
 
-  sanitizedInput = sanitize(userInput);
-  (sanitizedInput === userInput) || (displayWarning(`Stripped characters not present in ${imCurrent} from '${userInput}'. Searched for '${sanitizedInput}' instead.`));
-  searchedTerm = (imCurrent === 'hk' || imCurrent === 'english') ? sanitizedInput : convertToHK(sanitizedInput);
-  termToColorize = searchedTerm.replace(/\*/g, '') ;
-  //FIXME: dirty checks , make const of DOM
-  (searchOptionsContainer.querySelector('#option-any-ending').checked) && (searchedTerm = searchedTerm + '*') ;//will be changed in search() to proper regex
-  (searchOptionsContainer.querySelector('#option-any-beginning').checked) && (searchedTerm = '*' + searchedTerm) ;
-  (searchOptionsContainer.querySelector('#option-fulltext').checked) && (searchRange = 'fulltext') ;
+    imCurrent = checkOption(imEls);// dear Tom from future: keep it before sanitize() call
+    // dmCurrent = checkOption(dmEls);
 
-  matches = search(searchedTerm, searchRange); 
-  matches = devanagariAlphabeticalSort(matches, 'HK') ;
-  matches = colorizeMatches(matches, termToColorize);
-  // (dmCurrent === 'hk') || matches = convertFullTextToIAST(matches);
-  displayMatches(matches);
+    sanitizedInput = sanitize(userInput);
+    (sanitizedInput === userInput) || (displayWarning(`Stripped characters not present in ${imCurrent} from '${userInput}'. Searched for '${sanitizedInput}' instead.`));
+    searchedTerm = (imCurrent === 'hk' || imCurrent === 'english') ? sanitizedInput : convertToHK(sanitizedInput);
+    termToColorize = searchedTerm.replace(/\*/g, '') ;
+    //FIXME: dirty checks , make const of DOM
+    (searchOptionsContainer.querySelector('#option-any-ending').checked) && (searchedTerm = searchedTerm + '*') ;//will be changed in search() to proper regex
+    (searchOptionsContainer.querySelector('#option-any-beginning').checked) && (searchedTerm = '*' + searchedTerm) ;
+    (searchOptionsContainer.querySelector('#option-fulltext').checked) && (searchRange = 'fulltext') ;
+
+    matches = search(searchedTerm, searchRange); 
+    matches = devanagariAlphabeticalSort(matches, 'HK') ;
+    matches = colorizeMatches(matches, termToColorize);
+    inputHistory.push([userInput , matches]);
+    console.log(inputHistory);
+    // (dmCurrent === 'hk') || matches = convertFullTextToIAST(matches);
+    displayMatches(matches);
+  } ;
 };
 
 
