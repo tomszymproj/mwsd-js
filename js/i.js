@@ -2,26 +2,30 @@
 
 //---------------------- constants
 const allowedChars = 'aiueokgcjtdmnpbhyrlvs*' // chars allowed in userInput for all input methods
-const imEls = Array.from(document.querySelectorAll('.input-method')); //im- stands for 'input method'
+const displayMethodSelector = document.querySelector('#display-method-selector') ;
 const dmEls = Array.from(document.querySelectorAll('.display-method'))//dm stands for 'display method'
+const fullTextSearch = document.querySelector('#option-fulltext');
+const hideOptionsButton = document.querySelector('#hide-options') ;
+const imEls = Array.from(document.querySelectorAll('.input-method')); //im- stands for 'input method'
 const imScheme = [] ;
-  imScheme['hk'] =   ['A', 'I', 'U', 'R', 'L', 'T', 'D', 'G', 'N', 'J', 'M', 'S', 'z', 'H']; //most important transliteration, used for searches
+  imScheme['hk'] =   ['A', 'I', 'U', 'R', 'L', 'T', 'D', 'G', 'N', 'J', 'M', 'S', 'z', 'H']; //used internally for searches
   imScheme['iast'] = ['ā', 'ī', 'ū', 'ṛ', 'ḷ', 'ṭ', 'ḍ', 'ṅ', 'ṇ', 'ñ', 'ṃ', 'ṣ', 'ś', 'ḥ'];
   imScheme['velthuis'] = ['_a', '_i', '_u', 'XX', '.l', '.t', '.d', '`n', '.n', '~n', '.m', '.s', 'XY', '.h'];
   imScheme['english'] = '-abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 const imSelector = document.querySelector('#input-methods-selector') ; // container for input method radio buttons
-const matchContainer = document.querySelector('#search-match') ;
-const startSearchButton = document.querySelector('#start-search');
 const inputField = document.querySelector('#input-field');
-const warningsContainer = document.querySelector('#warnings-container');
-const searchOptionsContainer = document.querySelector('#search-options-wrap') ;
-const displayMethodSelector = document.querySelector('#display-method-selector') ;
-const fullTextSearch = document.querySelector('#option-fulltext');
-const searchOptions = ['#option-any-ending', '#option-any-beginning', 'label[for="option-any-beginning"]', 'label[for="option-any-ending"]'] ;
-const hideOptionsButton = document.querySelector('#hide-options') ;
-const showOptionsButton = document.querySelector('#show-options') ;
-const inputMethodWrapper = document.querySelector('#input-methods-wrapper');
 const inputMethodEnglish = document.querySelector('#input-method-english');
+const inputMethodWrapper = document.querySelector('#input-methods-wrapper');
+const matchContainer = document.querySelector('#search-match') ;
+const searchOptions = ['#option-any-ending', '#option-any-beginning', 'label[for="option-any-beginning"]', 'label[for="option-any-ending"]'] ;
+const searchOptionsContainer = document.querySelector('#search-options-wrap') ;
+const showOptionsButton = document.querySelector('#show-options') ;
+const startSearchButton = document.querySelector('#start-search');
+const warningsContainer = document.querySelector('#warnings-container');
+// need constants assigned above
+const optionAnyBeginningCheckbox = searchOptionsContainer.querySelector('#option-any-beginning');
+const optionAnyEndingCheckbox = searchOptionsContainer.querySelector('#option-any-ending');
+const optionFulltextCheckbox = searchOptionsContainer.querySelector('#option-fulltext');
 //--------------------- vars
 let imCurrent;
 let warnings = [];
@@ -45,7 +49,7 @@ showOptionsButton.addEventListener('click', function(ev) {
 
 
 inputField.addEventListener('keyup', function(ev){
-  if (ev.keyCode === 13) {
+  if (ev.keyCode === 13) { // keycode 13 = enter
     ev.preventDefault();
     startSearchButton.click();
   };
@@ -55,6 +59,7 @@ inputMethodEnglish.addEventListener('click', function(ev) {
   ev.target.checked && (document.querySelector("#option-fulltext").checked = true);
   });
 
+//--------------------- functions
 let checkOption = function(els) {
   for (let ii = 0; ii < els.length; ++ii) {
     if (els[ii].checked) {
@@ -75,7 +80,7 @@ let checkCachedResults = function(userInput, inputHistory) {
         break ;
       } ;
     } ;
-};
+}; //end of checkCachedResults()
 
 let convertToHK = function(string) {
   let ss = string;
@@ -147,7 +152,7 @@ let search = function (searchedTerm, searchRange){
   };
   (matches.length > 0) || matches.push(`No such word: ${searchedTerm}`);
   return matches;
-};
+}; // end of search()
 
 let displayMatches = function(matches) {
   let els = [];
@@ -166,7 +171,7 @@ let displayWarning = function(warning) {
     warningsContainer
       .appendChild(document.createElement('p'))
       .innerHTML = warning;
-  };
+};
 
 let colorizeMatches = function(matches, termToColorize) {
     // matches[0] = '<ul>' + matches[0] ;
@@ -177,7 +182,7 @@ let colorizeMatches = function(matches, termToColorize) {
     matches[ii] = matches[ii].replace(/(^[^ \t]+)/g, '<span class="color-match">$1</span>') ; 
     matches[ii] = matches[ii].replace(ttc, '<span class="color-exact-term">$1</span>') ; //dear Tom from future, has to be after "color-match"
     matches[ii] = matches[ii].replace(/--->/g, '♥') // FIXME: works, but find a proper regex
-    matches[ii] = matches[ii].replace(/♥([^♥]+)/g, '<li>$1</li>') //FIXME: cont.
+    matches[ii] = matches[ii].replace(/♥([^♥]+)/g, '<li>$1</li>') //FIXME:  works, but find a proper regex
     matches[ii] = matches[ii].replace(/([^√]{1}[^\[]+)(\[[^\]\[]+\])/g, '$1<span class="color-compound">$2</span>') ;
     matches[ii] = matches[ii].replace(/(\[[AP ]+\])/g, '<span class="color-voice">$1</span>') ;
     matches[ii] = matches[ii].replace(/(\b(Intens|inf|(p|P)ass|Pot|Subj|du|Nom|P|gen|acc|loc|instr|nom|dat|voc|fut|pf|pl|sg|P|Ā|aor|impf|Impv|Prec|Caus|p|Desid|ind)\.)/g, '<span class="color-gram">$1</span>') ;
@@ -185,7 +190,7 @@ let colorizeMatches = function(matches, termToColorize) {
     matches[ii] = matches[ii].replace(/(cl. *[\d]+\.)/g, '<span class="color-class">$1</span>') ;
   }; 
   return matches;
-};
+}; // end of colorizeMatches()
 
 function devanagariAlphabeticalSort(listOfWords, sourceTransliteration, returnType) { //wrapper function
   const alphabeticalOrder = {
@@ -236,9 +241,9 @@ function devanagariAlphabeticalSort(listOfWords, sourceTransliteration, returnTy
   };
 
   return returnValue ;
-  // =============================
-}
+} //end of devanagariAlphabeticalSort()
 
+//MAIN
 let update = function(userInput) {
   let inputCached;
   let matches ;
@@ -254,7 +259,7 @@ let update = function(userInput) {
   if (Array.isArray(inputCached)) { // if cached, display
     displayMatches(inputCached) ;
     console.log(`${userInput} found in cache as: ${inputCached[0]}`) ;
-  } else { //if not, look it up, colorize, push into inputHistory and display
+  } else { //if not, look it up in dict, colorize found terms, push into inputHistory and display
 
     imCurrent = checkOption(imEls);// dear Tom from future: keep it before sanitize() call
     // dmCurrent = checkOption(dmEls);
@@ -264,9 +269,9 @@ let update = function(userInput) {
     searchedTerm = (imCurrent === 'hk' || imCurrent === 'english') ? sanitizedInput : convertToHK(sanitizedInput);
     termToColorize = searchedTerm.replace(/\*/g, '') ;
     //FIXME: dirty checks , make const of DOM
-    (searchOptionsContainer.querySelector('#option-any-ending').checked) && (searchedTerm = searchedTerm + '*') ;//will be changed in search() to proper regex
-    (searchOptionsContainer.querySelector('#option-any-beginning').checked) && (searchedTerm = '*' + searchedTerm) ;
-    (searchOptionsContainer.querySelector('#option-fulltext').checked) && (searchRange = 'fulltext') ;
+    optionAnyEndingCheckbox.checked && (searchedTerm = searchedTerm + '*') ;//will be changed in search() to proper regex
+    optionAnyBeginningCheckbox.checked && (searchedTerm = '*' + searchedTerm) ;
+    optionFulltextCheckbox.checked && (searchRange = 'fulltext') ;
 
     matches = search(searchedTerm, searchRange); 
     matches = devanagariAlphabeticalSort(matches, 'HK') ;
@@ -276,7 +281,7 @@ let update = function(userInput) {
     // (dmCurrent === 'hk') || matches = convertFullTextToIAST(matches);
     displayMatches(matches);
   } ;
-};
+}; //end of update()
 
 
 }());//end of wrapper function
